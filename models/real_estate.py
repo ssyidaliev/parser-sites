@@ -5,6 +5,8 @@ from models.base_model import BaseModel
 
 
 class RealEstate(Base, BaseModel):
+    __tablename__ = 'real_estate'
+
     type_of_sentence = Column(String)
     house_type = Column(String)
     purpose = Column(String)
