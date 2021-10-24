@@ -6,9 +6,10 @@ from decouple import config
 DB_NAME = config('DB_NAME')
 DB_USER = config('DB_USER')
 DB_PASSWORD = config('DB_PASSWORD')
+DB_HOST = config('DB_HOST')
 DB_PORT = config('DB_PORT')
 
-engine = create_engine(f'postgresql://{DB_USER}:{DB_PASSWORD}@localhost:{DB_PORT}/{DB_NAME}', echo=False)
+engine = create_engine(f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}', echo=False)
 
 Session = sessionmaker(bind=engine)
 
