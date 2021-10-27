@@ -12,6 +12,6 @@ DB_PORT = config('DB_PORT')
 
 engine = create_engine(f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}', echo=False)
 
-Session = sessionmaker(bind=engine)
+session = sessionmaker(bind=engine)
 
 Base = declarative_base()

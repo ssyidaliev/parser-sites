@@ -1,8 +1,8 @@
-"""second
+"""update passender_car model
 
-Revision ID: 2e94f5dbb709
-Revises: d43d9af9150a
-Create Date: 2021-10-25 02:32:44.971396
+Revision ID: efea7a3a2cf4
+Revises: 
+Create Date: 2021-10-27 18:46:27.078113
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2e94f5dbb709'
-down_revision = 'd43d9af9150a'
+revision = 'efea7a3a2cf4'
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -47,7 +47,6 @@ def upgrade():
     sa.UniqueConstraint('key')
     )
     op.create_table('passenger_car',
-    sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('key', sa.String(), nullable=True),
     sa.Column('title', sa.String(), nullable=True),
     sa.Column('price', sa.String(), nullable=True),
@@ -57,8 +56,9 @@ def upgrade():
     sa.Column('is_read', sa.Boolean(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
-    sa.Column('brand', sa.String(), nullable=True),
-    sa.Column('model', sa.String(), nullable=True),
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('brand', sa.String(), nullable=False),
+    sa.Column('model', sa.String(), nullable=False),
     sa.Column('year_of_issue', sa.String(), nullable=True),
     sa.Column('body_type', sa.String(), nullable=True),
     sa.Column('mileage', sa.String(), nullable=True),
@@ -66,7 +66,7 @@ def upgrade():
     sa.Column('engine', sa.String(), nullable=True),
     sa.Column('transmission_type', sa.String(), nullable=True),
     sa.Column('drive_unit', sa.String(), nullable=True),
-    sa.Column('steerin_wheel', sa.String(), nullable=True),
+    sa.Column('steering_wheel', sa.String(), nullable=True),
     sa.Column('condition', sa.String(), nullable=True),
     sa.Column('customs', sa.String(), nullable=True),
     sa.Column('availability', sa.String(), nullable=True),
@@ -74,6 +74,11 @@ def upgrade():
     sa.Column('other', sa.Text(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('key')
+    )
+    op.create_table('passenger_car_images',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('blob', sa.LargeBinary(), nullable=True),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('real_estate',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -154,6 +159,7 @@ def downgrade():
     op.drop_table('telephone')
     op.drop_table('spare')
     op.drop_table('real_estate')
+    op.drop_table('passenger_car_images')
     op.drop_table('passenger_car')
     op.drop_table('commercial')
     # ### end Alembic commands ###
