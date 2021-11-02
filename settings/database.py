@@ -2,7 +2,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from decouple import config
-from models import *
 
 DB_NAME = config('DB_NAME')
 DB_USER = config('DB_USER')
