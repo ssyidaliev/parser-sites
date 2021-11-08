@@ -5,6 +5,8 @@ from models.base_model import BaseModel
 
 
 class Commercial(Base, BaseModel):
+    __tablename__ = 'commercial'
+
     brand = Column(String)
     model = Column(String)
     year_of_issue = Column(String)

@@ -1,10 +1,12 @@
-from sqlalchemy import Column, String, Text
+from sqlalchemy import Column, String, Text, Integer
 
 from settings.database import Base
 from models.base_model import BaseModel
 
 
 class RealEstate(Base, BaseModel):
+    __tablename__ = 'real_estate'
+
     type_of_sentence = Column(String)
     house_type = Column(String)
     purpose = Column(String)
