@@ -6,8 +6,8 @@ from models.base_model import BaseModel
 class PassengerCar(Base, BaseModel):
     __tablename__ = 'passenger_car'
 
-    brand = Column(String, nullable=False)
-    model = Column(String, nullable=False)
+    brand = Column(String)
+    model = Column(String)
     year_of_issue = Column(String)
     body_type = Column(String)
     mileage = Column(String)

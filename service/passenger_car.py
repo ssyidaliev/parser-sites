@@ -215,3 +215,11 @@ def get_updated_date(updated_date: str):
         case _:
             end_date = now
             return end_date
+
+
+def get_convert_date(date: str):
+    calendar = ['янв', 'фев', "мар", "апр", "мая", "июня", "июля", "авг", "сен", "окт", "нояб", "дек"]
+    date_list = date.split(" ")[1].replace(".", "")
+    for i in range(len(calendar)):
+        if calendar[i] in date_list:
+            return datetime.date(day=int(date.split(" ")[0]), month=i+1, year=int(date.split(" ")[2]))
