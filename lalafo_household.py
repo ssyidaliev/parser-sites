@@ -10,25 +10,24 @@ from selenium.webdriver.common.by import By
 
 from models.logging import LoggingRecord
 from service.lalafo import save_images_for_lalafo
-from service.passenger_car import PassengerCarService, get_convert_date
-from service.real_estate import RealEstateService
-from service.telephone import TelephoneService
+from service.passenger_car import get_convert_date
+from service.household import HouseholdService
 from settings.database import session
 
 fake = FakeUserAgent()
 HEADERS = {'User-Agent': fake.random}
-url = 'https://lalafo.kg/kyrgyzstan/mobilnye-telefony-i-aksessuary/mobilnye-telefony'
+url = 'https://lalafo.kg/kyrgyzstan/bytovaya-tekhnika'
 base_url = 'https://lalafo.kg'
 pages_count = config('PAGES_COUNT')
 conn = session()
 
 
-def lalafo_phones(url: str, pages: int):
+def lalafo_household(url: str, pages: int):
     for page in range(0, pages):
         try:
             options = webdriver.ChromeOptions()
             options.add_argument("headless")
-            driver = webdriver.Chrome(executable_path='chromedriver',
+            driver = webdriver.Chrome(executable_path='parsing/chromedriver',
                                       options=options)
             driver.get(url=(url + '?page=' + str(page)))
             time.sleep(3)
@@ -64,17 +63,13 @@ def lalafo_phones(url: str, pages: int):
                                 index += 1
                                 if index == limit:
                                     break
-                    images_list = save_images_for_lalafo(images=link, name='lalafo_tel', key=key)
+                    images_list = save_images_for_lalafo(images=link, name='lalafo_household', key=key)
                     try:
                         description = soup.find('div', class_='description__wrap').get_text(strip=True)
                     except AttributeError:
                         description = None
                     clear_cat = soup.findAll('p', class_='Paragraph secondary')
                     condition = None
-                    memory = None
-                    ram = None
-                    model = None
-                    color = None
                     delivery = None
                     additionally = None
                     for cat in clear_cat:
@@ -82,38 +77,29 @@ def lalafo_phones(url: str, pages: int):
 
                             case 'Состояние':
                                 condition = cat.find_next().get_text(strip=True)
-                            case 'Объем памяти':
-                                memory = cat.find_next().get_text(strip=True)
-                            case 'Цвет':
-                                color = cat.find_next().get_text(strip=True)
-                            case 'Модель':
-                                model = cat.find_next().get_text(strip=True)
                             case 'Дополнительно':
                                 additionally = cat.find_next().get_text(strip=True)
                             case 'Доставка':
                                 delivery = cat.find_next().get_text(strip=True)
-                            case 'Оперативная память, RAM (ГБ.)':
-                                ram = cat.find_next().get_text(strip=True)
                             case _:
                                 pass
-                    if not TelephoneService.check_record(key=key):
-                        TelephoneService.create_record(key=key, title=title, model=model, additionally=additionally,
-                                                       color=color, memory=memory, description=description,
-                                                       condition=condition, delivery=delivery, ram=ram, price=price,
+                    if not HouseholdService.check_record(key=key):
+                        HouseholdService.create_record(key=key, title=title, additionally=additionally,
+                                                       description=description,
+                                                       condition=condition, delivery=delivery, price=price,
                                                        created_at=created_at, updated_at=updated_at,
                                                        city_of_sale=region, phone_number=phone_number)
-                        phone_id = TelephoneService.get(phone_number=phone_number, model=model, memory=memory,
-                                                        price=price)
-                        TelephoneService.add_image(image_list=images_list, phone_id=phone_id.id, key=key)
-                    print({'Состояние': condition, "Модель": model, "Цвет": color, "объем памяти": memory,
+                        household_id = HouseholdService.get(phone_number=phone_number, condition=condition, price=price)
+                        HouseholdService.add_image(image_list=images_list, household_id=household_id.id, key=key)
+                    print({'Состояние': condition,
                            "Дополнительно": additionally,
-                           "Доставка": delivery, "ОЗУ": ram})
+                           "Доставка": delivery})
             print(f"[INFO] Parsing page {page + 1} was successfully completed")
         except Exception as ex:
             print(ex)
             logging = LoggingRecord(log=ex,
                                     log_name=f"{base_url} - error on request",
-                                    log_status=response.status_code,
+                                    log_status='lalafo_household',
                                     created_at=datetime.datetime.now())
             conn.add(logging)
             conn.commit()
@@ -122,5 +108,5 @@ def lalafo_phones(url: str, pages: int):
             driver.quit()
 
 
-def run_lalafo_tel():
-    lalafo_phones(url=url, pages=int(pages_count))
+def run_lalafo_household():
+    lalafo_household(url=url, pages=int(pages_count))

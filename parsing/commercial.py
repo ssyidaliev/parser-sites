@@ -77,12 +77,10 @@ def vehicles_cars(url: str, pages: int, headers: Dict):
                             # Забираю характеристика машины
                             year_of_issue = None
                             mileage = None
-                            body_type = None
                             color = None
                             engine = None
                             transmission_type = None
                             drive_unit = None
-                            steering_wheel = None
                             condition = None
                             customs = None
                             exchange = None
@@ -97,8 +95,6 @@ def vehicles_cars(url: str, pages: int, headers: Dict):
                                             year_of_issue = cat.find_next().get_text()
                                         case 'Пробег':
                                             mileage = cat.find_next().get_text()
-                                        case 'Кузов':
-                                            body_type = cat.find_next().get_text()
                                         case 'Цвет':
                                             color = cat.find_next().get_text()
                                         case 'Двигатель':
@@ -107,8 +103,6 @@ def vehicles_cars(url: str, pages: int, headers: Dict):
                                             transmission_type = cat.find_next().get_text()
                                         case 'Привод':
                                             drive_unit = cat.find_next().get_text()
-                                        case 'Руль':
-                                            steering_wheel = cat.find_next().get_text()
                                         case 'Состояние':
                                             condition = cat.find_next().get_text()
                                         case 'Таможня':
@@ -146,7 +140,7 @@ def vehicles_cars(url: str, pages: int, headers: Dict):
                             CommercialService.add_image(key=key, image_list=images_list, car_id=car_id.id)
                     except AttributeError:
                         pass
-                print({'Название': title, 'Ключ': key, "Марка": brand, "Модель": model})
+                    print({'Название': title, 'Ключ': key, "Марка": brand, "Модель": model})
             else:
                 logging = LoggingRecord(log=(url + '/search/all/?page=' + str(page + 1), 'error on this link'),
                                         log_name=f"{base_url} - error on request", log_status=response.status_code,

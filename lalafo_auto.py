@@ -26,7 +26,7 @@ def lalafo_cars(url: str, pages: int):
         try:
             options = webdriver.ChromeOptions()
             options.add_argument("headless")
-            driver = webdriver.Chrome(executable_path='chromedriver',
+            driver = webdriver.Chrome(executable_path='parsing/chromedriver',
                                       options=options)
             driver.get(url=(url + '?page=' + str(page)))
             time.sleep(3)

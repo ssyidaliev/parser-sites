@@ -55,11 +55,10 @@ class Inst:
         time.sleep(3)
         print(datetime.today().strftime(f'%H:%M:%S | Авторизация в Instagram выполнена.'))
 
-    def scrap_post(self, url, user_count, current_date):
+    def scrap_post(self, url, current_date):
         self.driver.get(url)
         soup = bs(self.driver.page_source, 'html.parser')
         time.sleep(2)
-        count = 0
         post_links = []
 
         for elem in soup.find('article', class_='ySN3v'):
@@ -72,11 +71,12 @@ class Inst:
             self.driver.get(post)
             time.sleep(2)
             soup = bs(self.driver.page_source, 'html.parser')
+            date = soup.find('time', class_='Nzb55').get('datetime').replace('T', ' ').replace('Z', '').split(' ')[0]
+            created_at = datetime.strptime(date, "%Y-%m-%d")
 
             if soup.find('video', class_='tWeCl') is not None:
-                count += 1
                 print('Пост видео, пропускаем.')
-                if count == user_count:
+                if current_date - timedelta(days=5) == created_at:
                     break
                 continue
 
@@ -97,7 +97,7 @@ class Inst:
                             self.driver.find_element(By.CLASS_NAME, '_6CZji').click()
                         except selenium.common.exceptions.NoSuchElementException:
                             break
-                        time.sleep(0.5)
+                        time.sleep(1)
                         img.append(i_class.find('img', class_='FFVAD').get('src'))
                         index += 1
                     else:
@@ -107,8 +107,6 @@ class Inst:
 
             # title
             title = soup.find('div', class_='C4VMK').find_all('span')[-1].text
-            date = soup.find('time', class_='Nzb55').get('datetime').replace('T', ' ').replace('Z', '').split(' ')[0]
-            created_at = datetime.strptime(date, "%Y-%m-%d")
             user_dict['url'] = url
             user_dict['img'] = img
             user_dict['title'] = title
@@ -128,8 +126,7 @@ class Inst:
                     conn.add(record)
                 conn.commit()
                 out.close()
-            if current_date - timedelta(days=3) == created_at:
-                print('9'*200)
+            if current_date - timedelta(days=5) == created_at:
                 break
 
     def close_browser(self):
