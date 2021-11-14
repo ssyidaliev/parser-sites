@@ -9,6 +9,7 @@ class BaseModel:
     phone_number = Column(String)
     city_of_sale = Column(String)
     description = Column(Text)
+    country = Column(String, default='KG')
     is_read = Column(Boolean, default=False)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)

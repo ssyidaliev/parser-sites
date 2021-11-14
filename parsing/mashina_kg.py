@@ -11,7 +11,7 @@ from settings.database import session
 
 pages_count = config('PAGES_COUNT')
 base_url = 'https://www.mashina.kg'
-urls_list = ['/search/all/', '/commercialsearch/all/']
+urls_list = '/search/all/'
 fake = FakeUserAgent()
 HEADERS = {'User-Agent': fake.random}
 HEADERS_COOKIE = {'User-Agent': fake.random, 'Host': 'www.mashina.kg', 'X-Requested-With': 'XMLHttpRequest'}
@@ -26,8 +26,8 @@ def vehicles_cars(url: str, pages: int, headers: Dict):
             print(f"Парсинг страницы mashina.kg {page + 1}")
             time.sleep(0.1)
             response = requests.get(url=base_url + '/search/all/?page=' + str(page + 1), headers=headers)
-            soup = Soup(response.text, "html.parser")
             if response.status_code == 200:
+                soup = Soup(response.text, "html.parser")
                 items = soup.findAll('div', class_='list-item')
                 for item in items:
                     try:
@@ -153,17 +153,17 @@ def vehicles_cars(url: str, pages: int, headers: Dict):
                 logging = LoggingRecord(log=(url + '/search/all/?page=' + str(page + 1), 'error on this link'),
                                         log_name=f"{base_url} - error on request", log_status=response.status_code,
                                         created_at=datetime.datetime.now())
-                conn.add(logging).commit()
+                conn.add(logging)
+                conn.commit()
                 print("[INFO] Something went wrong")
         print("[INFO] Parsing was successfully completed")
     except requests.exceptions.ConnectionError as ex:
         logging = LoggingRecord(log=str(ex), log_name=f"{base_url} - error on request",
-                                created_at=datetime.datetime.now())
+                                created_at=datetime.datetime.now(), log_status="404")
         conn.add(logging)
         conn.commit()
         print("[INFO] Something went wrong")
 
 
 def run_mashina_kg():
-    for ul in urls_list:
-        vehicles_cars(url=(base_url+ul), pages=int(pages_count), headers=HEADERS)
+    vehicles_cars(url=base_url, pages=int(pages_count), headers=HEADERS)

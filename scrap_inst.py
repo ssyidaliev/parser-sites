@@ -1,4 +1,5 @@
 import base64
+import shutil
 import sys
 import config
 import requests
@@ -15,8 +16,17 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup as bs
+
+from models.household_images import HouseHoldImage
 from models.passenger_car_images import PassengerCarImage
+from models.real_estate_images import RealEstateImage
+from models.spare_images import SpareImage
+from models.telephone_images import TelephoneImage
+from service.household import HouseholdService
 from service.passenger_car import PassengerCarService, conn
+from service.real_estate import RealEstateService
+from service.spare import SpareService
+from service.telephone import TelephoneService
 
 fake = FakeUserAgent()
 HEADERS = {'User-Agent': fake.random}
@@ -28,7 +38,9 @@ class Inst:
         self.login = login
         self.password = password
         self.data = {'data': {'items': []}}
-        self.driver = webdriver.Chrome(executable_path='parsing/chromedriver')
+        self.options = webdriver.ChromeOptions()
+        self.options.add_argument("headless")
+        self.driver = webdriver.Chrome(executable_path='parsing/chromedriver', options=self.options)
 
     def auth_inst(self):
         print(datetime.today().strftime(f'%H:%M:%S | Выполняется авторизация в Instagram.'))
@@ -55,11 +67,10 @@ class Inst:
         time.sleep(3)
         print(datetime.today().strftime(f'%H:%M:%S | Авторизация в Instagram выполнена.'))
 
-    def scrap_post(self, url, user_count, current_date):
+    def scrap_post(self, url, current_date, file_name):
         self.driver.get(url)
         soup = bs(self.driver.page_source, 'html.parser')
         time.sleep(2)
-        count = 0
         post_links = []
 
         for elem in soup.find('article', class_='ySN3v'):
@@ -72,11 +83,12 @@ class Inst:
             self.driver.get(post)
             time.sleep(2)
             soup = bs(self.driver.page_source, 'html.parser')
+            date = soup.find('time', class_='Nzb55').get('datetime').replace('T', ' ').replace('Z', '').split(' ')[0]
+            created_at = datetime.strptime(date, "%Y-%m-%d")
 
             if soup.find('video', class_='tWeCl') is not None:
-                count += 1
                 print('Пост видео, пропускаем.')
-                if count == user_count:
+                if current_date - timedelta(days=5) == created_at:
                     break
                 continue
 
@@ -97,7 +109,7 @@ class Inst:
                             self.driver.find_element(By.CLASS_NAME, '_6CZji').click()
                         except selenium.common.exceptions.NoSuchElementException:
                             break
-                        time.sleep(0.5)
+                        time.sleep(1)
                         img.append(i_class.find('img', class_='FFVAD').get('src'))
                         index += 1
                     else:
@@ -106,30 +118,57 @@ class Inst:
                 continue
 
             # title
+            time.sleep(0.5)
             title = soup.find('div', class_='C4VMK').find_all('span')[-1].text
-            date = soup.find('time', class_='Nzb55').get('datetime').replace('T', ' ').replace('Z', '').split(' ')[0]
-            created_at = datetime.strptime(date, "%Y-%m-%d")
             user_dict['url'] = url
             user_dict['img'] = img
             user_dict['title'] = title
             self.write_json(user_dict)
-            if not PassengerCarService.check_record(title=title):
-                PassengerCarService.create_record(title=title)
-                car_id = PassengerCarService.get(title=title)
-                for item in img:
-                    response = requests.get(url=item, headers=HEADERS)
-                    file = url.replace("https://instagram.", "").replace("/", "")
-                    if response.status_code == 200:
-                        out = open(f'images/instagram/{file}.jpg', 'wb')
-                        out.write(response.content)
-                    with open(f'images/instagram/{file}.jpg', 'rb') as image_file:
-                        code = base64.b64encode(image_file.read())
-                    record = PassengerCarImage(image=code, passenger_car_id=car_id.id, created_at=current_date)
-                    conn.add(record)
-                conn.commit()
-                out.close()
-            if current_date - timedelta(days=3) == created_at:
-                print('9'*200)
+            match file_name:
+                case 'dom_kg':
+                    create_record_and_image_for_houses(url=url, title=title, created_at=created_at, img=img,
+                                                       current_date=current_date, country="KG")
+                case 'dom_kz':
+                    create_record_and_image_for_houses(url=url, title=title, created_at=created_at, img=img,
+                                                       current_date=current_date, country="KZ")
+                case 'household_kg':
+                    create_record_and_image_for_household(url=url, title=title, created_at=created_at, img=img,
+                                                          current_date=current_date, country="KG")
+                case 'household_kz':
+                    create_record_and_image_for_household(url=url, title=title, created_at=created_at, img=img,
+                                                          current_date=current_date, country="KZ")
+                case 'household_uz':
+                    create_record_and_image_for_household(url=url, title=title, created_at=created_at, img=img,
+                                                          current_date=current_date, country="UZ")
+                case 'mashina_kg':
+                    create_record_and_image_for_cars(url=url, title=title, created_at=created_at, img=img,
+                                                     current_date=current_date, country="KG")
+                case 'mashina_kz':
+                    create_record_and_image_for_cars(url=url, title=title, created_at=created_at, img=img,
+                                                     current_date=current_date, country="KZ")
+                case 'mashina_uz':
+                    create_record_and_image_for_cars(url=url, title=title, created_at=created_at, img=img,
+                                                     current_date=current_date, country="KZ")
+                case 'phone_kg':
+                    create_record_and_image_for_phone(url=url, title=title, created_at=created_at, img=img,
+                                                      current_date=current_date, country="KG")
+                case 'phone_kz':
+                    create_record_and_image_for_phone(url=url, title=title, created_at=created_at, img=img,
+                                                      current_date=current_date, country="KZ")
+                case 'phone_uz':
+                    create_record_and_image_for_phone(url=url, title=title, created_at=created_at, img=img,
+                                                      current_date=current_date, country="KZ")
+                case 'spare_kg':
+                    create_record_and_image_for_spare(url=url, title=title, created_at=created_at, img=img,
+                                                      current_date=current_date, country="KG")
+                case 'spare_kz':
+                    create_record_and_image_for_spare(url=url, title=title, created_at=created_at, img=img,
+                                                      current_date=current_date, country="KZ")
+                case 'spare_uz':
+                    create_record_and_image_for_spare(url=url, title=title, created_at=created_at, img=img,
+                                                      current_date=current_date, country="KZ")
+
+            if current_date - timedelta(days=5) == created_at:
                 break
 
     def close_browser(self):
@@ -139,3 +178,103 @@ class Inst:
     def write_json(self, info):
         self.data['data']['items'].append(info)
         print(self.data)
+
+
+def create_record_and_image_for_cars(url: str, title: str, created_at: datetime, img: list, current_date: datetime,
+                                     country: str):
+    if not PassengerCarService.check_record(title=title):
+        PassengerCarService.create_record(title=title, created_at=created_at, country=country)
+        car_id = PassengerCarService.get(title=title)
+        for item in img:
+            response = requests.get(url=item, headers=HEADERS)
+            file = url.replace("https://instagram.", "").replace("/", "")
+            if response.status_code == 200:
+                out = open(f'images/instagram/{file}.jpg', 'wb')
+                out.write(response.content)
+            with open(f'images/instagram/{file}.jpg', 'rb') as image_file:
+                code = base64.b64encode(image_file.read())
+                shutil.rmtree(f"images/{file}", ignore_errors=True)
+            record = PassengerCarImage(image=code, passenger_car_id=car_id.id, created_at=current_date)
+            conn.add(record)
+        conn.commit()
+        out.close()
+
+
+def create_record_and_image_for_houses(url: str, title: str, created_at: datetime, img: list, current_date: datetime,
+                                       country: str):
+    if not RealEstateService.check_record(title=title):
+        RealEstateService.create_record(title=title, created_at=created_at, country=country)
+        house_id = RealEstateService.get(title=title)
+        for item in img:
+            response = requests.get(url=item, headers=HEADERS)
+            file = url.replace("https://instagram.", "").replace("/", "")
+            if response.status_code == 200:
+                out = open(f'images/instagram/{file}.jpg', 'wb')
+                out.write(response.content)
+            with open(f'images/instagram/{file}.jpg', 'rb') as image_file:
+                code = base64.b64encode(image_file.read())
+                shutil.rmtree(f"images/{file}", ignore_errors=True)
+            record = RealEstateImage(image=code, real_estate_id=house_id.id, created_at=current_date)
+            conn.add(record)
+        conn.commit()
+        out.close()
+
+
+def create_record_and_image_for_household(url: str, title: str, created_at: datetime, img: list, current_date: datetime,
+                                          country: str):
+    if not HouseholdService.check_record(title=title):
+        HouseholdService.create_record(title=title, created_at=created_at, country=country)
+        hold_id = HouseholdService.get(title=title)
+        for item in img:
+            response = requests.get(url=item, headers=HEADERS)
+            file = url.replace("https://instagram.", "").replace("/", "")
+            if response.status_code == 200:
+                out = open(f'images/instagram/{file}.jpg', 'wb')
+                out.write(response.content)
+            with open(f'images/instagram/{file}.jpg', 'rb') as image_file:
+                code = base64.b64encode(image_file.read())
+                shutil.rmtree(f"images/{file}", ignore_errors=True)
+            record = HouseHoldImage(image=code, household_id=hold_id.id, created_at=current_date)
+            conn.add(record)
+        conn.commit()
+        out.close()
+
+
+def create_record_and_image_for_phone(url: str, title: str, created_at: datetime, img: list, current_date: datetime,
+                                      country: str):
+    if not TelephoneService.check_record(title=title):
+        TelephoneService.create_record(title=title, created_at=created_at, country=country)
+        phone_id = TelephoneService.get(title=title)
+        for item in img:
+            response = requests.get(url=item, headers=HEADERS)
+            file = url.replace("https://instagram.", "").replace("/", "")
+            if response.status_code == 200:
+                out = open(f'images/instagram/{file}.jpg', 'wb')
+                out.write(response.content)
+            with open(f'images/instagram/{file}.jpg', 'rb') as image_file:
+                code = base64.b64encode(image_file.read())
+                shutil.rmtree(f"images/{file}", ignore_errors=True)
+            record = TelephoneImage(image=code, telephone_id=phone_id.id, created_at=current_date)
+            conn.add(record)
+        conn.commit()
+        out.close()
+
+
+def create_record_and_image_for_spare(url: str, title: str, created_at: datetime, img: list, current_date: datetime,
+                                      country: str):
+    if not SpareService.check_record(title=title):
+        SpareService.create_record(title=title, created_at=created_at, country=country)
+        spare_id = SpareService.get(title=title)
+        for item in img:
+            response = requests.get(url=item, headers=HEADERS)
+            file = url.replace("https://instagram.", "").replace("/", "")
+            if response.status_code == 200:
+                out = open(f'images/instagram/{file}.jpg', 'wb')
+                out.write(response.content)
+            with open(f'images/instagram/{file}.jpg', 'rb') as image_file:
+                code = base64.b64encode(image_file.read())
+                shutil.rmtree(f"images/{file}", ignore_errors=True)
+            record = SpareImage(image=code, spare_id=spare_id.id, created_at=current_date)
+            conn.add(record)
+        conn.commit()
+        out.close()

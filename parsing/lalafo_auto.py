@@ -23,11 +23,11 @@ conn = session()
 
 def lalafo_cars(url: str, pages: int):
     for page in range(0, pages):
+        options = webdriver.ChromeOptions()
+        options.add_argument("headless")
+        driver = webdriver.Chrome(executable_path="../chromedriver",
+                                  options=options)
         try:
-            options = webdriver.ChromeOptions()
-            options.add_argument("headless")
-            driver = webdriver.Chrome(executable_path='chromedriver',
-                                      options=options)
             driver.get(url=(url + '?page=' + str(page)))
             time.sleep(3)
             items = driver.find_elements(By.CLASS_NAME, "AdTileHorizontalTitle")
@@ -138,4 +138,4 @@ def lalafo_cars(url: str, pages: int):
 
 
 def run_lalafo_auto():
-    lalafo_cars(url=url, pages=int(pages_count))
+    lalafo_cars(url=url, pages=int(pages_count)*7)

@@ -33,8 +33,8 @@ class SpareService:
                 code = base64.b64encode(item)
                 image = SpareImage(image=code, spare_id=spare_id, created_at=datetime.datetime.now())
                 conn.add(image)
+                shutil.rmtree(f"images/{name}/{key}", ignore_errors=True)
             conn.commit()
-            shutil.rmtree(f"images/{name}/{key}", ignore_errors=True)
             return True
         else:
             return

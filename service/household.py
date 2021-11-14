@@ -34,8 +34,8 @@ class HouseholdService:
             code = base64.b64encode(item)
             image = HouseHoldImage(image=code, household_id=household_id, created_at=datetime.datetime.now())
             conn.add(image)
+            shutil.rmtree(f"images/{key}", ignore_errors=True)
         conn.commit()
-        shutil.rmtree(f"images/{key}", ignore_errors=True)
         return True
 
     @classmethod

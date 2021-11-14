@@ -26,8 +26,8 @@ def spare_parsing(url: str, pages: int, headers: Dict):
             print(f"Парсинг страницы mashina.kg {page + 1}")
             time.sleep(0.1)
             response = requests.get(url=url + str(page + 1), headers=headers)
-            soup = Soup(response.text, "html.parser")
             if response.status_code == 200:
+                soup = Soup(response.text, "html.parser")
                 items = soup.findAll('div', class_='list-item')
                 for item in items:
                     try:
@@ -49,7 +49,8 @@ def spare_parsing(url: str, pages: int, headers: Dict):
                                 strip=True)
                             images = several_soup.findAll('div', class_='fotorama')
                             create_date = several_soup.find('h1',
-                                                            {'style': 'word-break: break-word'}).findNext().findNext().find(
+                                                            {
+                                                                'style': 'word-break: break-word'}).findNext().findNext().find(
                                 'span').get_text(strip=True)
                             created_at = get_created_date(create_date)
                             number = several_soup.find('div', class_='number').get_text(strip=True)
@@ -96,7 +97,8 @@ def spare_parsing(url: str, pages: int, headers: Dict):
                                                                   phone_number=number)
                                 if not query:
                                     SpareService.create_record(key=key, title=title, phone_number=number, model=model,
-                                                               price=price, city_of_sale=address, description=description,
+                                                               price=price, city_of_sale=address,
+                                                               description=description,
                                                                condition=condition, created_at=created_at, brand=brand,
                                                                updated_at=updated_at, availability=availability,
                                                                other=others)
@@ -106,6 +108,12 @@ def spare_parsing(url: str, pages: int, headers: Dict):
                                 print({'Название': title, 'Ключ': key, "Марка": brand, "Модель": model})
                     except AttributeError:
                         pass
+            else:
+                logging = LoggingRecord(log=base_url, log_name=f"{base_url} - error on request",
+                                        created_at=datetime.datetime.now(), log_status=response.status_code)
+                conn.add(logging)
+                conn.commit()
+                print("[INFO] Something went wrong")
         print('[INFO] Parsing was successfully completed')
     except requests.exceptions.ConnectionError as ex:
         logging = LoggingRecord(log=str(ex), log_name=f"{base_url} - error on request",
