@@ -34,8 +34,8 @@ class TelephoneService:
             code = base64.b64encode(item)
             image = TelephoneImage(image=code, telephone_id=phone_id, created_at=datetime.datetime.now())
             conn.add(image)
+            shutil.rmtree(f"images/{key}", ignore_errors=True)
         conn.commit()
-        shutil.rmtree(f"images/{key}", ignore_errors=True)
         return True
 
     @classmethod

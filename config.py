@@ -1,3 +1,5 @@
 URL = 'https://www.instagram.com'
 LOGIN = 'mashina2809'
 PASSWORD = 'mashina2809!'
+LOGIN_2 = 'maksattologonov'
+PASSWORD_2 = 'CaoDlWCDD0jnsyhx'

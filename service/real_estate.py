@@ -33,8 +33,8 @@ class RealEstateService:
                 code = base64.b64encode(item)
                 image = RealEstateImage(image=code, real_estate_id=house_id, created_at=datetime.datetime.now())
                 conn.add(image)
+                shutil.rmtree(f"images/{name}/{key}", ignore_errors=True)
             conn.commit()
-            shutil.rmtree(f"images/{name}/{key}", ignore_errors=True)
             return True
         else:
             return
