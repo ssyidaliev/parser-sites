@@ -25,7 +25,7 @@ def lalafo_cars(url: str, pages: int):
     for page in range(0, pages):
         options = webdriver.ChromeOptions()
         options.add_argument("headless")
-        driver = webdriver.Chrome(executable_path="../chromedriver",
+        driver = webdriver.Chrome(executable_path="chromedriver",
                                   options=options)
         try:
             driver.get(url=(url + '?page=' + str(page)))
@@ -46,7 +46,8 @@ def lalafo_cars(url: str, pages: int):
                     price = soup.find('span', class_='heading').get_text().replace('USD', '').replace("KGS", "")
                     date = soup.find('span', class_='text-inline')
                     try:
-                        updated_at = get_convert_date(date.find_next().find_next().find_next().find_next().get_text(strip=True))
+                        updated_at = get_convert_date(
+                            date.find_next().find_next().find_next().find_next().get_text(strip=True))
                     except AttributeError:
                         updated_at = None
                     link = []
@@ -138,4 +139,4 @@ def lalafo_cars(url: str, pages: int):
 
 
 def run_lalafo_auto():
-    lalafo_cars(url=url, pages=int(pages_count)*7)
+    lalafo_cars(url=url, pages=int(pages_count) * 7)
