@@ -68,8 +68,9 @@ class Inst:
         time.sleep(3)
         print(datetime.today().strftime(f'%H:%M:%S | Авторизация в Instagram выполнена.'))
 
-    def scrap_post(self, url, current_date, file_name):
+    def scrap_post(self, url, count, current_date, file_name):
         self.driver.get(url)
+        amount = 0
         try:
             soup = bs(self.driver.page_source, 'html.parser')
             time.sleep(2)
@@ -90,8 +91,9 @@ class Inst:
                 created_at = datetime.strptime(date, "%Y-%m-%d")
 
                 if soup.find('video', class_='tWeCl') is not None:
+                    amount += 1
                     print('Пост видео, пропускаем.')
-                    if current_date - timedelta(days=5) == created_at:
+                    if current_date - timedelta(days=5) == created_at or amount == count:
                         break
                     continue
 
@@ -170,8 +172,8 @@ class Inst:
                     case 'spare_uz':
                         create_record_and_image_for_spare(url=url, title=title, created_at=created_at, img=img,
                                                           current_date=current_date, country="KZ")
-
-                if current_date - timedelta(days=5) == created_at:
+                amount += 1
+                if current_date - timedelta(days=5) == created_at or amount == count:
                     break
         except Exception:
             return 'error'
