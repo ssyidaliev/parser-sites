@@ -12,7 +12,7 @@ from parsing.commercial import run_commercial
 from parsing.house_kg import run_house_kg
 from parsing.mashina_kg import run_mashina_kg
 from parsing.mashina_kg_spare import run_mashina_spare
-from scrap_inst import Inst
+from parsing.scrap_inst import Inst
 
 
 def check_config(url: str, login: str, password: str):
@@ -25,37 +25,37 @@ def check_config(url: str, login: str, password: str):
 
 
 def run():
-    # pars_url = []
-    # path, dirs, files = next(os.walk("accounts"))
-    # for file in files:
-    #     with open(f'accounts/{file}', 'r') as f:  # читаем файл с аккаунтами
-    #         for acc in f.readlines():
-    #             pars_url.append(acc.strip('\n'))  # заполняем список
-    #     file_name = file.replace('.txt', '')
-    #     url = config.URL
-    #     login = config.LOGIN
-    #     password = config.PASSWORD
-    #     check_config(url, login, password)
-    #     current_date = datetime.datetime.today()
-    #     parser = Inst(url, login, password)  # Инициализируем класс авторизации
-    #     parser.auth_inst()  # Авторизация в инстаграм
-    #     for user_url in pars_url:
-    #         parser.scrap_post(user_url, current_date, file_name)  # Парсим страницу
-    #     parser.close_browser()  # закрываем браузер
-    # time.sleep(1)
-    # print("Парсинг коммерческих машин")
-    # run_commercial()
-    # time.sleep(1)
-    # print("Парсинг House.kg")
-    # run_house_kg()
-    # time.sleep(1)
-    # print("Парсинг легковых машин")
-    # run_mashina_kg()
-    # time.sleep(1)
-    # # print("Парсинг запчастей на mashina.kg")
-    # run_mashina_spare()
-    # time.sleep(1)
-    # print("Парсинг машин на lalafo.kg")
+    pars_url = []
+    path, dirs, files = next(os.walk("accounts"))
+    for file in files:
+        with open(f'accounts/{file}', 'r') as f:  # читаем файл с аккаунтами
+            for acc in f.readlines():
+                pars_url.append(acc.strip('\n'))  # заполняем список
+        file_name = file.replace('.txt', '')
+        url = config.URL
+        login = config.LOGIN
+        password = config.PASSWORD
+        check_config(url, login, password)
+        current_date = datetime.datetime.today()
+        parser = Inst(url, login, password)  # Инициализируем класс авторизации
+        parser.auth_inst()  # Авторизация в инстаграм
+        for user_url in pars_url:
+            parser.scrap_post(user_url, current_date, file_name)  # Парсим страницу
+        parser.close_browser()  # закрываем браузер
+    time.sleep(1)
+    print("Парсинг коммерческих машин")
+    run_commercial()
+    time.sleep(1)
+    print("Парсинг House.kg")
+    run_house_kg()
+    time.sleep(1)
+    print("Парсинг легковых машин")
+    run_mashina_kg()
+    time.sleep(1)
+    print("Парсинг запчастей на mashina.kg")
+    run_mashina_spare()
+    time.sleep(1)
+    print("Парсинг машин на lalafo.kg")
     run_lalafo_auto()
     time.sleep(1)
     print("Парсинг бытовой техники на lalafo.kg")

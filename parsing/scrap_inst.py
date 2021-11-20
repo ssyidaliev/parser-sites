@@ -40,7 +40,7 @@ class Inst:
         self.data = {'data': {'items': []}}
         self.options = webdriver.ChromeOptions()
         self.options.add_argument("headless")
-        self.driver = webdriver.Chrome(executable_path='parsing/chromedriver', options=self.options)
+        self.driver = webdriver.Chrome(executable_path='/home/makstt/PycharmProjects/parser-sites/parsing/chromedriver')
 
     def auth_inst(self):
         print(datetime.today().strftime(f'%H:%M:%S | Выполняется авторизация в Instagram.'))
@@ -177,7 +177,7 @@ class Inst:
 
     def write_json(self, info):
         self.data['data']['items'].append(info)
-        print(self.data)
+        print(info['title'])
 
 
 def create_record_and_image_for_cars(url: str, title: str, created_at: datetime, img: list, current_date: datetime,

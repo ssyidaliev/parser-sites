@@ -104,7 +104,7 @@ def spare_parsing(url: str, pages: int, headers: Dict):
                                                                other=others)
                                     spare_id = SpareService.get(key=key)
                                     SpareService.add_image(key=key, image_list=images_list, spare_id=spare_id.id,
-                                                           name=name)
+                                                           name='spare')
                                 print({'Название': title, 'Ключ': key, "Марка": brand, "Модель": model})
                     except AttributeError:
                         pass
