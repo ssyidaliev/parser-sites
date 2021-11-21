@@ -28,7 +28,7 @@ def lalafo_phones(url: str, pages: int):
     for page in range(0, pages):
         options = webdriver.ChromeOptions()
         options.add_argument("headless")
-        driver = webdriver.Chrome(executable_path='chromedriver',
+        driver = webdriver.Chrome(executable_path=PATH,
                                   options=options)
         try:
             driver.get(url=(url + '?page=' + str(page)))
