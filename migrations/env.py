@@ -8,6 +8,7 @@ from alembic import context
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 from settings.base import Base
+from decouple import config as conf
 
 config = context.config
 
@@ -25,6 +26,14 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+
+
+section = config.config_ini_section
+config.set_section_option(section, "DB_USER", conf("DB_USER"))
+config.set_section_option(section, "DB_PASSWORD", conf("DB_PASSWORD"))
+config.set_section_option(section, "DB_NAME", conf("DB_NAME"))
+config.set_section_option(section, "DB_HOST", conf("DB_HOST"))
+config.set_section_option(section, "DB_PORT", conf("DB_PORT"))
 
 
 def run_migrations_offline():
