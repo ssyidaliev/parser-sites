@@ -9,7 +9,9 @@ DB_PASSWORD = config('DB_PASSWORD')
 DB_HOST = config('DB_HOST')
 DB_PORT = config('DB_PORT')
 
-engine = create_engine(f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}', echo=False)
+url = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+
+engine = create_engine(url, echo=False)
 
 session = sessionmaker(bind=engine)
 

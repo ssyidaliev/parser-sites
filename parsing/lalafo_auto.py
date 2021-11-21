@@ -151,4 +151,4 @@ def lalafo_cars(url: str, pages: int):
 
 
 def run_lalafo_auto():
-    lalafo_cars(url=url, pages=int(pages_count)*7)
+    lalafo_cars(url=url, pages=int(pages_count) * 7)

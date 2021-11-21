@@ -58,118 +58,124 @@ class Inst:
             try:
                 err = self.driver.find_element(By.CLASS_NAME, 'eiCW-').text
                 self.driver.quit()
-                sys.exit(err + '\nРабота завершена с ошибкой.')
+                return 'error'
             except NoSuchElementException:
                 err = self.driver.find_element(By.CLASS_NAME, 'O4QwN').text
                 self.driver.quit()
-                sys.exit(err + '\nРабота завершена с ошибкой.')
+                return 'error'
 
         time.sleep(3)
         print(datetime.today().strftime(f'%H:%M:%S | Авторизация в Instagram выполнена.'))
 
-    def scrap_post(self, url, current_date, file_name):
+    def scrap_post(self, url, count, current_date, file_name):
         self.driver.get(url)
-        soup = bs(self.driver.page_source, 'html.parser')
-        time.sleep(2)
-        post_links = []
-
-        for elem in soup.find('article', class_='ySN3v'):
-            for el in elem.find_all('a'):
-                link = el.get('href')
-                post_links.append(config.URL + link)
-
-        for post in post_links:
-            user_dict = {}
-            self.driver.get(post)
-            time.sleep(2)
+        amount = 0
+        try:
             soup = bs(self.driver.page_source, 'html.parser')
-            date = soup.find('time', class_='Nzb55').get('datetime').replace('T', ' ').replace('Z', '').split(' ')[0]
-            created_at = datetime.strptime(date, "%Y-%m-%d")
+            time.sleep(2)
+            post_links = []
 
-            if soup.find('video', class_='tWeCl') is not None:
-                print('Пост видео, пропускаем.')
-                if current_date - timedelta(days=5) == created_at:
-                    break
-                continue
+            for elem in soup.find('article', class_='ySN3v'):
+                for el in elem.find_all('a'):
+                    link = el.get('href')
+                    post_links.append(config.URL + link)
 
-            # img
-            try:
-                img = []
-                i_class = soup.find('div', class_='KL4Bh')
-                img.append(i_class.find('img', class_='FFVAD').get('src'))
-                try:
-                    button = self.driver.find_element(By.CLASS_NAME, '_6CZji')
-                except selenium.common.exceptions.NoSuchElementException:
-                    button = None
-                index = 0
-                finish = 6
-                while True:
-                    if button and index < finish:
-                        try:
-                            self.driver.find_element(By.CLASS_NAME, '_6CZji').click()
-                        except selenium.common.exceptions.NoSuchElementException:
-                            break
-                        time.sleep(1)
-                        img.append(i_class.find('img', class_='FFVAD').get('src'))
-                        index += 1
-                    else:
+            for post in post_links:
+                user_dict = {}
+                self.driver.get(post)
+                time.sleep(2)
+                soup = bs(self.driver.page_source, 'html.parser')
+                date = soup.find('time', class_='Nzb55').get('datetime').replace('T', ' ').replace('Z', '').split(' ')[
+                    0]
+                created_at = datetime.strptime(date, "%Y-%m-%d")
+
+                if soup.find('video', class_='tWeCl') is not None:
+                    amount += 1
+                    print('Пост видео, пропускаем.')
+                    if current_date - timedelta(days=5) == created_at or amount == count:
                         break
-            except AttributeError:
-                continue
+                    continue
 
-            # title
-            time.sleep(0.5)
-            title = soup.find('div', class_='C4VMK').find_all('span')[-1].text
-            user_dict['url'] = url
-            user_dict['img'] = img
-            user_dict['title'] = title
-            self.write_json(user_dict)
-            match file_name:
-                case 'dom_kg':
-                    create_record_and_image_for_houses(url=url, title=title, created_at=created_at, img=img,
-                                                       current_date=current_date, country="KG")
-                case 'dom_kz':
-                    create_record_and_image_for_houses(url=url, title=title, created_at=created_at, img=img,
-                                                       current_date=current_date, country="KZ")
-                case 'household_kg':
-                    create_record_and_image_for_household(url=url, title=title, created_at=created_at, img=img,
+                # img
+                try:
+                    img = []
+                    i_class = soup.find('div', class_='KL4Bh')
+                    img.append(i_class.find('img', class_='FFVAD').get('src'))
+                    try:
+                        button = self.driver.find_element(By.CLASS_NAME, '_6CZji')
+                    except selenium.common.exceptions.NoSuchElementException:
+                        button = None
+                    index = 0
+                    finish = 6
+                    while True:
+                        if button and index < finish:
+                            try:
+                                self.driver.find_element(By.CLASS_NAME, '_6CZji').click()
+                            except selenium.common.exceptions.NoSuchElementException:
+                                break
+                            time.sleep(1)
+                            img.append(i_class.find('img', class_='FFVAD').get('src'))
+                            index += 1
+                        else:
+                            break
+                except AttributeError:
+                    continue
+
+                # title
+                time.sleep(0.5)
+                title = soup.find('div', class_='C4VMK').find_all('span')[-1].text
+                user_dict['url'] = url
+                user_dict['img'] = img
+                user_dict['title'] = title
+                self.write_json(user_dict)
+                match file_name:
+                    case 'dom_kg':
+                        create_record_and_image_for_houses(url=url, title=title, created_at=created_at, img=img,
+                                                           current_date=current_date, country="KG")
+                    case 'dom_kz':
+                        create_record_and_image_for_houses(url=url, title=title, created_at=created_at, img=img,
+                                                           current_date=current_date, country="KZ")
+                    case 'household_kg':
+                        create_record_and_image_for_household(url=url, title=title, created_at=created_at, img=img,
+                                                              current_date=current_date, country="KG")
+                    case 'household_kz':
+                        create_record_and_image_for_household(url=url, title=title, created_at=created_at, img=img,
+                                                              current_date=current_date, country="KZ")
+                    case 'household_uz':
+                        create_record_and_image_for_household(url=url, title=title, created_at=created_at, img=img,
+                                                              current_date=current_date, country="UZ")
+                    case 'mashina_kg':
+                        create_record_and_image_for_cars(url=url, title=title, created_at=created_at, img=img,
+                                                         current_date=current_date, country="KG")
+                    case 'mashina_kz':
+                        create_record_and_image_for_cars(url=url, title=title, created_at=created_at, img=img,
+                                                         current_date=current_date, country="KZ")
+                    case 'mashina_uz':
+                        create_record_and_image_for_cars(url=url, title=title, created_at=created_at, img=img,
+                                                         current_date=current_date, country="KZ")
+                    case 'phone_kg':
+                        create_record_and_image_for_phone(url=url, title=title, created_at=created_at, img=img,
                                                           current_date=current_date, country="KG")
-                case 'household_kz':
-                    create_record_and_image_for_household(url=url, title=title, created_at=created_at, img=img,
+                    case 'phone_kz':
+                        create_record_and_image_for_phone(url=url, title=title, created_at=created_at, img=img,
                                                           current_date=current_date, country="KZ")
-                case 'household_uz':
-                    create_record_and_image_for_household(url=url, title=title, created_at=created_at, img=img,
-                                                          current_date=current_date, country="UZ")
-                case 'mashina_kg':
-                    create_record_and_image_for_cars(url=url, title=title, created_at=created_at, img=img,
-                                                     current_date=current_date, country="KG")
-                case 'mashina_kz':
-                    create_record_and_image_for_cars(url=url, title=title, created_at=created_at, img=img,
-                                                     current_date=current_date, country="KZ")
-                case 'mashina_uz':
-                    create_record_and_image_for_cars(url=url, title=title, created_at=created_at, img=img,
-                                                     current_date=current_date, country="KZ")
-                case 'phone_kg':
-                    create_record_and_image_for_phone(url=url, title=title, created_at=created_at, img=img,
-                                                      current_date=current_date, country="KG")
-                case 'phone_kz':
-                    create_record_and_image_for_phone(url=url, title=title, created_at=created_at, img=img,
-                                                      current_date=current_date, country="KZ")
-                case 'phone_uz':
-                    create_record_and_image_for_phone(url=url, title=title, created_at=created_at, img=img,
-                                                      current_date=current_date, country="KZ")
-                case 'spare_kg':
-                    create_record_and_image_for_spare(url=url, title=title, created_at=created_at, img=img,
-                                                      current_date=current_date, country="KG")
-                case 'spare_kz':
-                    create_record_and_image_for_spare(url=url, title=title, created_at=created_at, img=img,
-                                                      current_date=current_date, country="KZ")
-                case 'spare_uz':
-                    create_record_and_image_for_spare(url=url, title=title, created_at=created_at, img=img,
-                                                      current_date=current_date, country="KZ")
-
-            if current_date - timedelta(days=5) == created_at:
-                break
+                    case 'phone_uz':
+                        create_record_and_image_for_phone(url=url, title=title, created_at=created_at, img=img,
+                                                          current_date=current_date, country="KZ")
+                    case 'spare_kg':
+                        create_record_and_image_for_spare(url=url, title=title, created_at=created_at, img=img,
+                                                          current_date=current_date, country="KG")
+                    case 'spare_kz':
+                        create_record_and_image_for_spare(url=url, title=title, created_at=created_at, img=img,
+                                                          current_date=current_date, country="KZ")
+                    case 'spare_uz':
+                        create_record_and_image_for_spare(url=url, title=title, created_at=created_at, img=img,
+                                                          current_date=current_date, country="KZ")
+                amount += 1
+                if current_date - timedelta(days=5) == created_at or amount == count:
+                    break
+        except Exception:
+            return 'error'
 
     def close_browser(self):
         print('Работа завершена.')
