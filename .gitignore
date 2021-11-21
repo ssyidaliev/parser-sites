@@ -8,7 +8,6 @@ alembic.ini
 *.so
 # Distribution / packaging
 .Python
-images/
 build/
 develop-eggs/
 dist/
