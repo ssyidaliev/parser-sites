@@ -1,8 +1,8 @@
-"""second update base model
+"""update base model
 
-Revision ID: 9ca397d9efdb
+Revision ID: 540af16bfb95
 Revises: 
-Create Date: 2021-11-14 23:08:48.422706
+Create Date: 2021-11-21 18:11:50.925598
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '9ca397d9efdb'
+revision = '540af16bfb95'
 down_revision = None
 branch_labels = None
 depends_on = None

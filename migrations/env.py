@@ -28,6 +28,14 @@ target_metadata = Base.metadata
 # ... etc.
 
 
+section = config.config_ini_section
+config.set_section_option(section, "DB_USER", conf("DB_USER"))
+config.set_section_option(section, "DB_PASSWORD", conf("DB_PASSWORD"))
+config.set_section_option(section, "DB_NAME", conf("DB_NAME"))
+config.set_section_option(section, "DB_HOST", conf("DB_HOST"))
+config.set_section_option(section, "DB_PORT", conf("DB_PORT"))
+
+
 def run_migrations_offline():
     """Run migrations in 'offline' mode.
 
@@ -40,7 +48,7 @@ def run_migrations_offline():
     script output.
 
     """
-    url = f'postgresql://{conf("DB_USER")}:{conf("DB_PASSWORD")}@{conf("DB_HOST")}:{conf("DB_PORT")}/{conf("DB_NAME")}'
+    url = config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url,
         target_metadata=target_metadata,
