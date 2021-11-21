@@ -30,13 +30,15 @@ class TelephoneService:
 
     @classmethod
     def add_image(cls, phone_id: int, image_list: list, key: str, name: str):
-        for item in image_list:
-            code = base64.b64encode(item)
-            image = TelephoneImage(image=code, telephone_id=phone_id, created_at=datetime.datetime.now())
-            conn.add(image)
-        shutil.rmtree(f"images/{name}/{key}", ignore_errors=True)
-        conn.commit()
-        return True
+        if image_list:
+            for item in image_list:
+                code = base64.b64encode(item)
+                image = TelephoneImage(image=code, telephone_id=phone_id, created_at=datetime.datetime.now())
+                conn.add(image)
+            shutil.rmtree(f"images/{name}/{key}", ignore_errors=True)
+            conn.commit()
+            return True
+        return
 
     @classmethod
     def get_image(cls, key: str, phone_id: int):
