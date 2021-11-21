@@ -40,7 +40,8 @@ class Inst:
         self.data = {'data': {'items': []}}
         self.options = webdriver.ChromeOptions()
         self.options.add_argument("headless")
-        self.driver = webdriver.Chrome(executable_path='/home/makstt/PycharmProjects/parser-sites/parsing/chromedriver')
+        self.driver = webdriver.Chrome(executable_path='/home/makstt/PycharmProjects/parser-sites/parsing/chromedriver',
+                                       options=self.options)
 
     def auth_inst(self):
         print(datetime.today().strftime(f'%H:%M:%S | Выполняется авторизация в Instagram.'))

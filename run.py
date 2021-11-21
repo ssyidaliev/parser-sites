@@ -13,6 +13,7 @@ from parsing.house_kg import run_house_kg
 from parsing.mashina_kg import run_mashina_kg
 from parsing.mashina_kg_spare import run_mashina_spare
 from parsing.scrap_inst import Inst
+from decouple import config as conf
 
 
 def check_config(url: str, login: str, password: str):
@@ -39,8 +40,9 @@ def run():
         current_date = datetime.datetime.today()
         parser = Inst(url, login, password)  # Инициализируем класс авторизации
         parser.auth_inst()  # Авторизация в инстаграм
+        count = conf('PAGES_COUNT')
         for user_url in pars_url:
-            parser.scrap_post(user_url, current_date, file_name)  # Парсим страницу
+            parser.scrap_post(user_url, count, current_date, file_name)  # Парсим страницу
         parser.close_browser()  # закрываем браузер
     time.sleep(1)
     print("Парсинг коммерческих машин")
@@ -91,6 +93,7 @@ def run():
             parser.close_browser()
             break
         parser.close_browser()  # закрываем браузер
+
 
 if __name__ == '__main__':
     run()
