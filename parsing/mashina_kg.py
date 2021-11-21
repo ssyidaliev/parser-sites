@@ -145,7 +145,8 @@ def vehicles_cars(url: str, pages: int, headers: Dict):
                                                               exchange=exchange, city_of_sale=region,
                                                               description=description, other=others)
                             car_id = PassengerCarService.get(key=key)
-                            PassengerCarService.add_image(key=key, image_list=images_list, car_id=car_id.id)
+                            PassengerCarService.add_image(key=key, image_list=images_list, car_id=car_id.id,
+                                                          name='mashina.kg')
                     except AttributeError:
                         pass
                     print({'Название': title, 'Ключ': key, "Марка": brand, "Модель": model})
