@@ -33,6 +33,7 @@ fake = FakeUserAgent()
 HEADERS = {'User-Agent': fake.random}
 PATH = conf('PATH_CHROMEDRIVER')
 
+
 class Inst:
     def __init__(self, url_inst, login, password):
         self.url = url_inst

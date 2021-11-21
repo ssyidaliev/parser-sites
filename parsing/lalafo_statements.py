@@ -13,7 +13,6 @@ from service.lalafo import save_images_for_lalafo
 from service.passenger_car import PassengerCarService, get_convert_date
 from service.real_estate import RealEstateService
 from settings.database import session
-from decouple import config as conf
 
 fake = FakeUserAgent()
 HEADERS = {'User-Agent': fake.random}
@@ -21,7 +20,7 @@ url = 'https://lalafo.kg/kyrgyzstan/nedvizhimost'
 base_url = 'https://lalafo.kg'
 pages_count = config('PAGES_COUNT')
 conn = session()
-PATH = conf('PATH_CHROMEDRIVER')
+PATH = config('PATH_CHROMEDRIVER')
 
 
 def lalafo_statements(url: str, pages: int):

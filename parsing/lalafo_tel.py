@@ -14,7 +14,6 @@ from service.passenger_car import PassengerCarService, get_convert_date
 from service.real_estate import RealEstateService
 from service.telephone import TelephoneService
 from settings.database import session
-from decouple import config as conf
 
 fake = FakeUserAgent()
 HEADERS = {'User-Agent': fake.random}
@@ -22,7 +21,8 @@ url = 'https://lalafo.kg/kyrgyzstan/mobilnye-telefony-i-aksessuary/mobilnye-tele
 base_url = 'https://lalafo.kg'
 pages_count = config('PAGES_COUNT')
 conn = session()
-PATH = conf('PATH_CHROMEDRIVER')
+PATH = config('PATH_CHROMEDRIVER')
+
 
 def lalafo_phones(url: str, pages: int):
     for page in range(0, pages):
@@ -136,4 +136,4 @@ def lalafo_phones(url: str, pages: int):
 
 
 def run_lalafo_tel():
-    lalafo_phones(url=url, pages=int(pages_count)*7)
+    lalafo_phones(url=url, pages=int(pages_count) * 7)

@@ -13,7 +13,6 @@ from service.lalafo import save_images_for_lalafo
 from service.passenger_car import get_convert_date
 from service.household import HouseholdService
 from settings.database import session
-from decouple import config as conf
 
 fake = FakeUserAgent()
 HEADERS = {'User-Agent': fake.random}
@@ -21,7 +20,8 @@ url = 'https://lalafo.kg/kyrgyzstan/bytovaya-tekhnika'
 base_url = 'https://lalafo.kg'
 pages_count = config('PAGES_COUNT')
 conn = session()
-PATH = conf('PATH_CHROMEDRIVER')
+PATH = config('PATH_CHROMEDRIVER')
+
 
 def lalafo_household(url: str, pages: int):
     for page in range(0, pages):
@@ -97,8 +97,9 @@ def lalafo_household(url: str, pages: int):
                                                            condition=condition, delivery=delivery, price=price,
                                                            created_at=created_at, updated_at=updated_at,
                                                            city_of_sale=region, phone_number=phone_number)
-                            household_id = HouseholdService.get(phone_number=phone_number, condition=condition, price=price)
-                            HouseholdService.add_image(image_list=images_list,  name='lalafo_household',
+                            household_id = HouseholdService.get(phone_number=phone_number, condition=condition,
+                                                                price=price)
+                            HouseholdService.add_image(image_list=images_list, name='lalafo_household',
                                                        household_id=household_id.id, key=key)
                         print({'Состояние': condition,
                                "Дополнительно": additionally,
@@ -125,4 +126,4 @@ def lalafo_household(url: str, pages: int):
 
 
 def run_lalafo_household():
-    lalafo_household(url=url, pages=int(pages_count)*7)
+    lalafo_household(url=url, pages=int(pages_count) * 7)
