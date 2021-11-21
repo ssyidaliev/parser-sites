@@ -27,10 +27,11 @@ from service.passenger_car import PassengerCarService, conn
 from service.real_estate import RealEstateService
 from service.spare import SpareService
 from service.telephone import TelephoneService
+from decouple import config as conf
 
 fake = FakeUserAgent()
 HEADERS = {'User-Agent': fake.random}
-
+PATH = conf('PATH_CHROMEDRIVER')
 
 class Inst:
     def __init__(self, url_inst, login, password):
@@ -40,7 +41,7 @@ class Inst:
         self.data = {'data': {'items': []}}
         self.options = webdriver.ChromeOptions()
         self.options.add_argument("headless")
-        self.driver = webdriver.Chrome(executable_path='/home/makstt/PycharmProjects/parser-sites/parsing/chromedriver',
+        self.driver = webdriver.Chrome(executable_path=PATH,
                                        options=self.options)
 
     def auth_inst(self):

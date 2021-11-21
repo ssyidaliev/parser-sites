@@ -12,6 +12,7 @@ from models.logging import LoggingRecord
 from service.lalafo import save_images_for_lalafo
 from service.passenger_car import PassengerCarService, get_convert_date
 from settings.database import session
+from decouple import config as conf
 
 fake = FakeUserAgent()
 HEADERS = {'User-Agent': fake.random}
@@ -19,13 +20,14 @@ url = 'https://lalafo.kg/kyrgyzstan/avtomobili-s-probegom'
 base_url = 'https://lalafo.kg'
 pages_count = config('PAGES_COUNT')
 conn = session()
+PATH = conf('PATH_CHROMEDRIVER')
 
 
 def lalafo_cars(url: str, pages: int):
     for page in range(0, pages):
         options = webdriver.ChromeOptions()
         options.add_argument("headless")
-        driver = webdriver.Chrome(executable_path="/home/makstt/PycharmProjects/parser-sites/parsing/chromedriver",
+        driver = webdriver.Chrome(executable_path=PATH,
                                   options=options)
         try:
             time.sleep(1)

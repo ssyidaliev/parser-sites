@@ -14,6 +14,7 @@ from service.passenger_car import PassengerCarService, get_convert_date
 from service.real_estate import RealEstateService
 from service.telephone import TelephoneService
 from settings.database import session
+from decouple import config as conf
 
 fake = FakeUserAgent()
 HEADERS = {'User-Agent': fake.random}
@@ -21,13 +22,13 @@ url = 'https://lalafo.kg/kyrgyzstan/mobilnye-telefony-i-aksessuary/mobilnye-tele
 base_url = 'https://lalafo.kg'
 pages_count = config('PAGES_COUNT')
 conn = session()
-
+PATH = conf('PATH_CHROMEDRIVER')
 
 def lalafo_phones(url: str, pages: int):
     for page in range(0, pages):
         options = webdriver.ChromeOptions()
         options.add_argument("headless")
-        driver = webdriver.Chrome(executable_path='/home/makstt/PycharmProjects/parser-sites/parsing/chromedriver',
+        driver = webdriver.Chrome(executable_path='chromedriver',
                                   options=options)
         try:
             driver.get(url=(url + '?page=' + str(page)))
