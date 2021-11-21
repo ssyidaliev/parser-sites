@@ -35,13 +35,15 @@ class PassengerCarService:
 
     @classmethod
     def add_image(cls, car_id: int, image_list: list, key: str, name: str):
-        for item in image_list:
-            code = base64.b64encode(item)
-            image = PassengerCarImage(image=code, passenger_car_id=car_id, created_at=datetime.datetime.now())
-            conn.add(image)
-        conn.commit()
-        shutil.rmtree(f"images/{name}/{key}", ignore_errors=True)
-        return True
+        if image_list:
+            for item in image_list:
+                code = base64.b64encode(item)
+                image = PassengerCarImage(image=code, passenger_car_id=car_id, created_at=datetime.datetime.now())
+                conn.add(image)
+            conn.commit()
+            shutil.rmtree(f"images/{name}/{key}", ignore_errors=True)
+            return True
+        return
 
     @classmethod
     def get_image(cls, key: str, car_id: int):

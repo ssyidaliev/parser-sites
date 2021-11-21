@@ -36,8 +36,7 @@ class SpareService:
                 shutil.rmtree(f"images/{name}/{key}", ignore_errors=True)
             conn.commit()
             return True
-        else:
-            return
+        return
 
     @classmethod
     def get_image(cls, key: str, spare_id: int, name: str):
