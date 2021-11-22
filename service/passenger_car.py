@@ -1,5 +1,6 @@
 import base64
 import datetime
+import os
 import shutil
 import time
 import requests
@@ -41,7 +42,7 @@ class PassengerCarService:
                 image = PassengerCarImage(image=code, passenger_car_id=car_id, created_at=datetime.datetime.now())
                 conn.add(image)
             conn.commit()
-            shutil.rmtree(f"images/{name}/{key}", ignore_errors=True)
+            shutil.rmtree(f'images/{name}/{key}/', ignore_errors=True)
             return True
         return
 

@@ -40,10 +40,10 @@ class CommercialService:
                 code = base64.b64encode(item)
                 image = CommercialImage(image=code, commercial_id=car_id, created_at=datetime.datetime.now())
                 conn.add(image)
-                shutil.rmtree(f"images/{key}", ignore_errors=True)
+            shutil.rmtree(f"images/{key}", ignore_errors=True)
             conn.commit()
             return True
-        except TypeError:
+        except:
             return
 
     @classmethod
