@@ -44,7 +44,8 @@ class HouseholdService:
     def get_image(cls, key: str, household_id: int):
         image = conn.query(HouseHoldImage.image).filter_by(household_id=household_id).all()
         try:
-            mkdir(f'images/{key}')
+            mkdir('images/lalafo_household')
+            mkdir(f'images/lalafo_household/{key}')
         except FileExistsError:
             pass
         if image:

@@ -1,5 +1,6 @@
 import datetime
 import os
+import shutil
 import sys
 import time
 
@@ -25,7 +26,35 @@ def check_config(url: str, login: str, password: str):
         sys.exit('Пароль пуст.')
 
 
+def make_dir():
+    try:
+        os.mkdir('images/mashina.kg')
+        os.mkdir('images/spare')
+        os.mkdir('images/house.kg')
+        os.mkdir('images/instagram')
+        os.mkdir('images/lalafo_cars')
+        os.mkdir('images/lalafo_house')
+        os.mkdir('images/lalafo_household')
+        os.mkdir('images/lalafo_tel')
+        os.mkdir('images/lalafo_statements')
+    except FileExistsError:
+        pass
+
+
+def remove_dir():
+    shutil.rmtree('images/mashina.kg/')
+    shutil.rmtree('images/spare/', ignore_errors=True)
+    shutil.rmtree('images/house.kg/', ignore_errors=True)
+    shutil.rmtree('images/instagram/', ignore_errors=True)
+    shutil.rmtree('images/lalafo_cars/', ignore_errors=True)
+    shutil.rmtree('images/lalafo_house/', ignore_errors=True)
+    shutil.rmtree('images/lalafo_household/', ignore_errors=True)
+    shutil.rmtree('images/lalafo_tel/', ignore_errors=True)
+    shutil.rmtree('images/lalafo_statements/', ignore_errors=True)
+
+
 def run():
+    make_dir()
     print("Парсинг коммерческих машин")
     run_commercial()
     time.sleep(1)
@@ -74,6 +103,7 @@ def run():
             parser.close_browser()
             break
         parser.close_browser()  # закрываем браузер
+    remove_dir()
 
 
 if __name__ == '__main__':
