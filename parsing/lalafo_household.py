@@ -27,7 +27,8 @@ def lalafo_household(url: str, pages: int):
     try:
         for page in range(0, pages):
             options = webdriver.ChromeOptions()
-            options.add_argument("headless")
+            options.add_argument("--no-sandbox")
+            options.headless = True
             driver = webdriver.Chrome(executable_path=PATH,
                                       options=options)
             try:
