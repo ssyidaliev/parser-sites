@@ -12,7 +12,7 @@ DB_PORT = config('DB_PORT')
 url = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
 
 engine = create_engine(url, echo=False)
-
+engine.execute("SET DateStyle='SQL, DMY'")
 session = sessionmaker(bind=engine)
 
 Base = declarative_base()
