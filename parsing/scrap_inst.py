@@ -41,7 +41,8 @@ class Inst:
         self.password = password
         self.data = {'data': {'items': []}}
         self.options = webdriver.ChromeOptions()
-        self.options.add_argument("headless")
+        self.options.add_argument("--no-sandbox")
+        self.options.headless = True
         self.driver = webdriver.Chrome(executable_path=PATH,
                                        options=self.options)
 
