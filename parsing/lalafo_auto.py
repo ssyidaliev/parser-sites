@@ -137,14 +137,14 @@ def lalafo_cars(url: str, pages: int):
                             logging = LoggingRecord(log=item.get_attribute('href'),
                                                     log_name=base_url,
                                                     log_status=response.status_code,
-                                                    created_at=datetime.datetime.now())
+                                                    created_at=datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
                             conn.add(logging)
                             conn.commit()
             except Exception as ex:
                 logging = LoggingRecord(log=url,
                                         log_name=base_url,
                                         log_status=ex,
-                                        created_at=datetime.datetime.now())
+                                        created_at=datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
                 conn.add(logging)
                 conn.commit()
             print(f"[INFO] Parsing page {page + 1} was successfully completed")
@@ -152,7 +152,7 @@ def lalafo_cars(url: str, pages: int):
         logging = LoggingRecord(log=url,
                                 log_name=base_url,
                                 log_status=ex,
-                                created_at=datetime.datetime.now())
+                                created_at=datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
         conn.add(logging)
         conn.commit()
     finally:
