@@ -28,6 +28,11 @@ def lalafo_statements(url: str, pages: int):
         for page in range(0, pages):
             options = webdriver.ChromeOptions()
             options.add_argument("--no-sandbox")
+            options.add_argument("start-maximized")
+            options.add_argument("disable-infobars")
+            options.add_argument("--disable-extensions")
+            options.add_argument("--disable-gpu")
+            options.add_argument("--disable-dev-shm-usage")
             options.headless = True
             driver = webdriver.Chrome(executable_path=PATH,
                                       options=options)
