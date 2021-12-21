@@ -11,5 +11,5 @@ class BaseModel:
     description = Column(Text)
     country = Column(String, default='KG')
     is_read = Column(Boolean, default=False)
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
+    created_at = Column(String)
+    updated_at = Column(String)

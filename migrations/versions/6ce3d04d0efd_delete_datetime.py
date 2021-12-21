@@ -1,16 +1,16 @@
-"""update base model
+"""delete datetime
 
-Revision ID: 540af16bfb95
+Revision ID: 6ce3d04d0efd
 Revises: 
-Create Date: 2021-11-21 18:11:50.925598
+Create Date: 2021-12-21 19:38:04.070348
 
 """
 from alembic import op
 import sqlalchemy as sa
-
+from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '540af16bfb95'
+revision = '6ce3d04d0efd'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -28,8 +28,8 @@ def upgrade():
     sa.Column('description', sa.Text(), nullable=True),
     sa.Column('country', sa.String(), nullable=True),
     sa.Column('is_read', sa.Boolean(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
-    sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sa.String(), nullable=True),
+    sa.Column('updated_at', sa.String(), nullable=True),
     sa.Column('brand', sa.String(), nullable=True),
     sa.Column('model', sa.String(), nullable=True),
     sa.Column('year_of_issue', sa.String(), nullable=True),
@@ -57,8 +57,8 @@ def upgrade():
     sa.Column('description', sa.Text(), nullable=True),
     sa.Column('country', sa.String(), nullable=True),
     sa.Column('is_read', sa.Boolean(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
-    sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sa.String(), nullable=True),
+    sa.Column('updated_at', sa.String(), nullable=True),
     sa.Column('condition', sa.String(), nullable=True),
     sa.Column('additionally', sa.String(), nullable=True),
     sa.Column('delivery', sa.String(), nullable=True),
@@ -70,7 +70,7 @@ def upgrade():
     sa.Column('log', sa.String(), nullable=True),
     sa.Column('log_name', sa.String(), nullable=True),
     sa.Column('log_status', sa.String(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id')
     )
@@ -84,8 +84,8 @@ def upgrade():
     sa.Column('description', sa.Text(), nullable=True),
     sa.Column('country', sa.String(), nullable=True),
     sa.Column('is_read', sa.Boolean(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
-    sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sa.String(), nullable=True),
+    sa.Column('updated_at', sa.String(), nullable=True),
     sa.Column('brand', sa.String(), nullable=True),
     sa.Column('model', sa.String(), nullable=True),
     sa.Column('year_of_issue', sa.String(), nullable=True),
@@ -114,8 +114,8 @@ def upgrade():
     sa.Column('description', sa.Text(), nullable=True),
     sa.Column('country', sa.String(), nullable=True),
     sa.Column('is_read', sa.Boolean(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
-    sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sa.String(), nullable=True),
+    sa.Column('updated_at', sa.String(), nullable=True),
     sa.Column('type_of_sentence', sa.String(), nullable=True),
     sa.Column('house_type', sa.String(), nullable=True),
     sa.Column('purpose', sa.String(), nullable=True),
@@ -147,8 +147,8 @@ def upgrade():
     sa.Column('description', sa.Text(), nullable=True),
     sa.Column('country', sa.String(), nullable=True),
     sa.Column('is_read', sa.Boolean(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
-    sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sa.String(), nullable=True),
+    sa.Column('updated_at', sa.String(), nullable=True),
     sa.Column('brand', sa.String(), nullable=True),
     sa.Column('model', sa.String(), nullable=True),
     sa.Column('condition', sa.String(), nullable=True),
@@ -167,8 +167,8 @@ def upgrade():
     sa.Column('description', sa.Text(), nullable=True),
     sa.Column('country', sa.String(), nullable=True),
     sa.Column('is_read', sa.Boolean(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
-    sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sa.String(), nullable=True),
+    sa.Column('updated_at', sa.String(), nullable=True),
     sa.Column('model', sa.String(), nullable=True),
     sa.Column('condition', sa.String(), nullable=True),
     sa.Column('memory', sa.String(), nullable=True),
@@ -183,7 +183,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('image', sa.LargeBinary(), nullable=True),
     sa.Column('commercial_id', sa.Integer(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['commercial_id'], ['commercial.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -191,7 +191,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('image', sa.LargeBinary(), nullable=True),
     sa.Column('household_id', sa.Integer(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['household_id'], ['household.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -199,7 +199,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('image', sa.LargeBinary(), nullable=True),
     sa.Column('passenger_car_id', sa.Integer(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['passenger_car_id'], ['passenger_car.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -207,7 +207,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('image', sa.LargeBinary(), nullable=True),
     sa.Column('real_estate_id', sa.Integer(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['real_estate_id'], ['real_estate.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -215,7 +215,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('image', sa.LargeBinary(), nullable=True),
     sa.Column('spare_id', sa.Integer(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['spare_id'], ['spare.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -223,15 +223,36 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('image', sa.LargeBinary(), nullable=True),
     sa.Column('telephone_id', sa.Integer(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['telephone_id'], ['telephone.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.drop_index('ix_users_email', table_name='users')
+    op.drop_index('ix_users_id', table_name='users')
+    op.drop_table('users')
     # ### end Alembic commands ###
 
 
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
+    op.create_table('users',
+    sa.Column('id', sa.INTEGER(), autoincrement=True, nullable=False),
+    sa.Column('name', sa.VARCHAR(length=50), autoincrement=False, nullable=True),
+    sa.Column('last_name', sa.VARCHAR(length=50), autoincrement=False, nullable=True),
+    sa.Column('email', sa.VARCHAR(length=100), autoincrement=False, nullable=True),
+    sa.Column('anonymous_name', sa.VARCHAR(length=50), autoincrement=False, nullable=True),
+    sa.Column('hashed_password', sa.TEXT(), autoincrement=False, nullable=True),
+    sa.Column('created_at', postgresql.TIMESTAMP(), autoincrement=False, nullable=True),
+    sa.Column('updated_at', postgresql.TIMESTAMP(), autoincrement=False, nullable=True),
+    sa.Column('is_student', sa.BOOLEAN(), autoincrement=False, nullable=True),
+    sa.Column('is_employee', sa.BOOLEAN(), autoincrement=False, nullable=True),
+    sa.Column('is_superuser', sa.BOOLEAN(), autoincrement=False, nullable=True),
+    sa.Column('is_active', sa.BOOLEAN(), autoincrement=False, nullable=True),
+    sa.PrimaryKeyConstraint('id', name='users_pkey'),
+    sa.UniqueConstraint('anonymous_name', name='users_anonymous_name_key')
+    )
+    op.create_index('ix_users_id', 'users', ['id'], unique=False)
+    op.create_index('ix_users_email', 'users', ['email'], unique=False)
     op.drop_table('telephone_images')
     op.drop_table('spare_images')
     op.drop_table('real_estate_images')

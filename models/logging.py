@@ -9,4 +9,4 @@ class LoggingRecord(Base):
     log = Column(String)
     log_name = Column(String)
     log_status = Column(String)
-    created_at = Column(DateTime)
+    created_at = Column(String)

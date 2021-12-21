@@ -1,5 +1,5 @@
 from settings.database import Base
-from sqlalchemy import Column, Integer, LargeBinary, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, LargeBinary, ForeignKey, String
 
 
 class HouseHoldImage(Base):
@@ -8,4 +8,4 @@ class HouseHoldImage(Base):
     id = Column(Integer, primary_key=True)
     image = Column(LargeBinary)
     household_id = Column(Integer, ForeignKey('household.id'))
-    created_at = Column(DateTime)
+    created_at = Column(String)
