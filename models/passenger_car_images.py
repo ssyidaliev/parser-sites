@@ -1,5 +1,5 @@
 from settings.database import Base
-from sqlalchemy import Column, Integer, LargeBinary, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, LargeBinary, ForeignKey, String
 
 
 class PassengerCarImage(Base):
@@ -8,4 +8,4 @@ class PassengerCarImage(Base):
     id = Column(Integer, primary_key=True)
     image = Column(LargeBinary)
     passenger_car_id = Column(Integer, ForeignKey('passenger_car.id'))
-    created_at = Column(DateTime)
+    created_at = Column(String)
