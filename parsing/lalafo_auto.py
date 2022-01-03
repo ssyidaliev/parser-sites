@@ -39,7 +39,7 @@ def lalafo_cars(url: str, pages: int):
                 time.sleep(5)
                 driver.get(url=(url + '?page=' + str(page)))
                 time.sleep(7)
-                items = driver.find_elements(By.CLASS_NAME, "AdTileHorizontalTitle")
+                items = driver.find_elements(By.CLASS_NAME, "AdTileHorizontal")
                 try:
                     region = driver.find_element(By.CLASS_NAME, "meta-info__city ").text
                 except:
