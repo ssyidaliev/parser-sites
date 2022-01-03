@@ -26,21 +26,21 @@ def lalafo_cars(url: str, pages: int):
     try:
         for page in range(0, pages):
             options = webdriver.ChromeOptions()
-            options.add_argument("--no-sandbox")
+            options.add_argument("--disable-dev-shm-usage")
             options.add_argument("start-maximized")
             options.add_argument("disable-infobars")
             options.add_argument("--disable-extensions")
             options.add_argument("--disable-gpu")
-            options.add_argument("--disable-dev-shm-usage")
-            options.headless = True
+            options.add_argument("--no-sandbox")
+            options.add_argument("--headless")
             driver = webdriver.Chrome(executable_path=PATH,
                                       options=options)
             print("good1")
             try:
-                time.sleep(10)
+                time.sleep(2)
                 print("good2")
                 driver.get(url=(url + '?page=' + str(page)))
-                time.sleep(10)
+                time.sleep(5)
                 print("good3")
                 items = driver.find_elements(By.CLASS_NAME, "AdTileHorizontalTitle")
                 try:
@@ -49,7 +49,7 @@ def lalafo_cars(url: str, pages: int):
                     region = None
                 created_at = ""
                 # driver.find_element(By.CLASS_NAME, 'AdTileHorizontalCallBtnTitle').click()
-                time.sleep(10)
+                time.sleep(3)
                 print("good4")
                 phone_number = ""
                 for item in items:
