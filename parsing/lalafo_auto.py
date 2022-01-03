@@ -48,10 +48,10 @@ def lalafo_cars(url: str, pages: int):
                 except:
                     region = None
                 created_at = ""
-                driver.find_element(By.CLASS_NAME, 'AdTileHorizontalCallBtnTitle').click()
+                # driver.find_element(By.CLASS_NAME, 'AdTileHorizontalCallBtnTitle').click()
                 time.sleep(10)
                 print("good4")
-                phone_number = driver.find_element(By.CLASS_NAME, 'AdTileHorizontalCallBtnTitle').text
+                phone_number = ""
                 for item in items:
                     if 'error' not in item.text and 'after' not in item.text:
                         response = requests.get(url=item.get_attribute('href'), headers=HEADERS)
