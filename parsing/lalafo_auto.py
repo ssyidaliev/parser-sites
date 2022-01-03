@@ -47,7 +47,7 @@ def lalafo_cars(url: str, pages: int):
                     region = driver.find_element(By.CLASS_NAME, "meta-info__city ").text
                 except:
                     region = None
-                created_at = driver.find_element(By.CLASS_NAME, 'AdTileHorizontalDate').text
+                created_at = ""
                 driver.find_element(By.CLASS_NAME, 'AdTileHorizontalCallBtnTitle').click()
                 time.sleep(10)
                 print("good4")
