@@ -160,13 +160,19 @@ def get_created_date(date: str):
             try:
                 end_date = datetime.date(day=(now.day - int(created_date)), year=now.year, month=now.month)
             except ValueError:
-                end_date = datetime.date(day=now.day, year=now.year, month=now.month - 1)
+                if now.month == 1:
+                    end_date = datetime.date(day=now.day, year=now.year, month=now.month)
+                else:
+                    end_date = datetime.date(day=now.day, year=now.year, month=now.month - 1)
             return end_date
         case "дней":
             try:
                 end_date = datetime.date(day=(now.day - int(created_date)), year=now.year, month=now.month)
             except ValueError:
-                end_date = datetime.date(day=now.day, year=now.year, month=now.month - 1)
+                if now.month == 1:
+                    end_date = datetime.date(day=now.day, year=now.year, month=now.month)
+                else:
+                    end_date = datetime.date(day=now.day, year=now.year, month=now.month - 1)
             return end_date
         case "м":
             end_date = now
@@ -201,7 +207,10 @@ def get_updated_date(updated_date: str):
             try:
                 end_date = datetime.date(day=(now.day - int(created_date)), year=now.year, month=now.month)
             except ValueError:
-                end_date = datetime.date(day=now.day, year=now.year, month=now.month - 1)
+                if now.month == 1:
+                    end_date = datetime.date(day=now.day, year=now.year, month=now.month)
+                else:
+                    end_date = datetime.date(day=now.day, year=now.year, month=now.month - 1)
             return end_date
         case "м":
             end_date = now
