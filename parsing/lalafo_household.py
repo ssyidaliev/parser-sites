@@ -49,7 +49,7 @@ def lalafo_household(url: str, pages: int):
                 except:
                     created_at = None
                 driver.find_element(By.CLASS_NAME, 'AdTileHorizontalCallBtnTitle').click()
-                time.sleep(1)
+                time.sleep(5)
                 phone_number = driver.find_element(By.CLASS_NAME, 'AdTileHorizontalCallBtnTitle').text
                 for item in items:
                     if 'error' not in item.text and 'after' not in item.text:

@@ -46,7 +46,7 @@ def lalafo_statements(url: str, pages: int):
                     region = None
                 created_at = driver.find_element(By.CLASS_NAME, 'AdTileHorizontalDate').text
                 driver.find_element(By.CLASS_NAME, 'AdTileHorizontalCallBtnTitle').click()
-                time.sleep(1)
+                time.sleep(5)
                 phone_number = driver.find_element(By.CLASS_NAME, 'AdTileHorizontalCallBtnTitle').text
                 for item in items:
                     if 'error' not in item.text and 'after' not in item.text:
