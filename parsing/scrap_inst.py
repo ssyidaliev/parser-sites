@@ -55,7 +55,7 @@ class Inst:
         passwd = self.driver.find_element(By.NAME, 'password')
         passwd.send_keys(self.password)
         passwd.send_keys(Keys.ENTER)
-        time.sleep(4)
+        time.sleep(8)
         try:
             self.driver.find_element(By.CLASS_NAME, 'ABCxa')
         except NoSuchElementException:
@@ -67,8 +67,7 @@ class Inst:
                 err = self.driver.find_element(By.CLASS_NAME, 'O4QwN').text
                 self.driver.quit()
                 return 'error'
-
-        time.sleep(3)
+        time.sleep(7)
         print(datetime.today().strftime(f'%H:%M:%S | Авторизация в Instagram выполнена.'))
 
     def scrap_post(self, url, count, current_date, file_name):
@@ -87,7 +86,7 @@ class Inst:
             for post in post_links:
                 user_dict = {}
                 self.driver.get(post)
-                time.sleep(2)
+                time.sleep(5)
                 soup = bs(self.driver.page_source, 'html.parser')
                 date = soup.find('time', class_='Nzb55').get('datetime').replace('T', ' ').replace('Z', '').split(' ')[
                     0]
@@ -117,7 +116,7 @@ class Inst:
                                 self.driver.find_element(By.CLASS_NAME, '_6CZji').click()
                             except selenium.common.exceptions.NoSuchElementException:
                                 break
-                            time.sleep(1)
+                            time.sleep(4)
                             img.append(i_class.find('img', class_='FFVAD').get('src'))
                             index += 1
                         else:

@@ -39,7 +39,7 @@ def lalafo_phones(url: str, pages: int):
                                       options=options)
             try:
                 driver.get(url=(url + '?page=' + str(page)))
-                time.sleep(3)
+                time.sleep(7)
                 items = driver.find_elements(By.CLASS_NAME, "AdTileHorizontalTitle")
                 try:
                     region = driver.find_element(By.CLASS_NAME, "meta-info__city ").text
@@ -47,7 +47,7 @@ def lalafo_phones(url: str, pages: int):
                     region = None
                 created_at = driver.find_element(By.CLASS_NAME, 'AdTileHorizontalDate').text
                 driver.find_element(By.CLASS_NAME, 'AdTileHorizontalCallBtnTitle').click()
-                time.sleep(1)
+                time.sleep(5)
                 phone_number = driver.find_element(By.CLASS_NAME, 'AdTileHorizontalCallBtnTitle').text
                 for item in items:
                     if 'error' not in item.text and 'after' not in item.text:
