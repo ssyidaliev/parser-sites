@@ -35,23 +35,19 @@ def lalafo_cars(url: str, pages: int):
             options.add_argument("--headless")
             driver = webdriver.Chrome(executable_path=PATH,
                                       options=options)
-            print("good1")
             try:
                 time.sleep(2)
-                print("good2")
                 driver.get(url=(url + '?page=' + str(page)))
                 time.sleep(5)
-                print("good3")
                 items = driver.find_elements(By.CLASS_NAME, "AdTileHorizontalTitle")
                 try:
                     region = driver.find_element(By.CLASS_NAME, "meta-info__city ").text
                 except:
                     region = None
-                created_at = ""
-                # driver.find_element(By.CLASS_NAME, 'AdTileHorizontalCallBtnTitle').click()
+                created_at = driver.find_element(By.CLASS_NAME, 'AdTileHorizontalDate').text
+                driver.find_element(By.CLASS_NAME, 'AdTileHorizontalCallBtnTitle').click()
                 time.sleep(3)
-                print("good4")
-                phone_number = ""
+                phone_number = driver.find_element(By.CLASS_NAME, 'AdTileHorizontalCallBtnTitle').text
                 for item in items:
                     if 'error' not in item.text and 'after' not in item.text:
                         response = requests.get(url=item.get_attribute('href'), headers=HEADERS)
